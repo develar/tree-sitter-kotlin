@@ -435,3 +435,279 @@ val y = 2
     (variable_declaration
       (simple_identifier))
     (integer_literal)))
+
+================================================================================
+Identifier statement before a lambda on the next line
+================================================================================
+
+fun f() {
+    op()
+    foo
+    { op() }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (simple_identifier)
+    (function_value_parameters)
+    (function_body
+      (statements
+        (call_expression
+          (simple_identifier)
+          (call_suffix
+            (value_arguments)))
+        (simple_identifier)
+        (lambda_literal
+          (statements
+            (call_expression
+              (simple_identifier)
+              (call_suffix
+                (value_arguments)))))))))
+
+================================================================================
+Qualified identifier statement before a lambda on the next line
+================================================================================
+
+fun f() {
+    op()
+    a.b
+    { op() }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (simple_identifier)
+    (function_value_parameters)
+    (function_body
+      (statements
+        (call_expression
+          (simple_identifier)
+          (call_suffix
+            (value_arguments)))
+        (navigation_expression
+          (simple_identifier)
+          (navigation_suffix
+            (simple_identifier)))
+        (lambda_literal
+          (statements
+            (call_expression
+              (simple_identifier)
+              (call_suffix
+                (value_arguments)))))))))
+
+================================================================================
+Callable reference statement before a lambda on the next line
+================================================================================
+
+fun f() {
+    op()
+    ::foo
+    { op() }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (simple_identifier)
+    (function_value_parameters)
+    (function_body
+      (statements
+        (call_expression
+          (simple_identifier)
+          (call_suffix
+            (value_arguments)))
+        (callable_reference
+          (simple_identifier))
+        (lambda_literal
+          (statements
+            (call_expression
+              (simple_identifier)
+              (call_suffix
+                (value_arguments)))))))))
+
+================================================================================
+Class delegate before the body on the next line
+================================================================================
+
+class C : I by foo
+{
+    fun member() {}
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (delegation_specifier
+      (explicit_delegation
+        (user_type
+          (type_identifier))
+        (simple_identifier)))
+    (class_body
+      (function_declaration
+        (simple_identifier)
+        (function_value_parameters)
+        (function_body)))))
+
+================================================================================
+Qualified class delegate before the body on the next line
+================================================================================
+
+class C : I by foo.bar
+{
+    fun member() {}
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (delegation_specifier
+      (explicit_delegation
+        (user_type
+          (type_identifier))
+        (navigation_expression
+          (simple_identifier)
+          (navigation_suffix
+            (simple_identifier)))))
+    (class_body
+      (function_declaration
+        (simple_identifier)
+        (function_value_parameters)
+        (function_body)))))
+
+================================================================================
+Supertype arguments on the next line
+================================================================================
+
+class S(project: Project) : Base<X.State>
+                            (ID, project),
+                            Other<X.State> {
+}
+
+val o = object : Base
+    (x) {}
+
+fun f() {
+    val e: String
+    (a).b()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (primary_constructor
+      (class_parameter
+        (simple_identifier)
+        (user_type
+          (type_identifier))))
+    (delegation_specifier
+      (constructor_invocation
+        (user_type
+          (type_identifier)
+          (type_arguments
+            (type_projection
+              (user_type
+                (type_identifier)
+                (type_identifier)))))
+        (value_arguments
+          (value_argument
+            (simple_identifier))
+          (value_argument
+            (simple_identifier)))))
+    (delegation_specifier
+      (user_type
+        (type_identifier)
+        (type_arguments
+          (type_projection
+            (user_type
+              (type_identifier)
+              (type_identifier))))))
+    (class_body))
+  (property_declaration
+    (binding_pattern_kind)
+    (variable_declaration
+      (simple_identifier))
+    (object_literal
+      (delegation_specifier
+        (constructor_invocation
+          (user_type
+            (type_identifier))
+          (value_arguments
+            (value_argument
+              (simple_identifier)))))
+      (class_body)))
+  (function_declaration
+    (simple_identifier)
+    (function_value_parameters)
+    (function_body
+      (statements
+        (property_declaration
+          (binding_pattern_kind)
+          (variable_declaration
+            (simple_identifier)
+            (user_type
+              (type_identifier))))
+        (call_expression
+          (navigation_expression
+            (parenthesized_expression
+              (simple_identifier))
+            (navigation_suffix
+              (simple_identifier)))
+          (call_suffix
+            (value_arguments)))))))
+
+================================================================================
+Lambda arrow on the line after its parameters
+================================================================================
+
+fun f() {
+    run { x
+        -> x }
+    a
+    -b
+    run { x // c
+        -> x }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (simple_identifier)
+    (function_value_parameters)
+    (function_body
+      (statements
+        (call_expression
+          (simple_identifier)
+          (call_suffix
+            (annotated_lambda
+              (lambda_literal
+                (lambda_parameters
+                  (variable_declaration
+                    (simple_identifier)))
+                (statements
+                  (simple_identifier))))))
+        (simple_identifier)
+        (prefix_expression
+          (simple_identifier))
+        (call_expression
+          (simple_identifier)
+          (call_suffix
+            (annotated_lambda
+              (lambda_literal
+                (lambda_parameters
+                  (variable_declaration
+                    (simple_identifier)))
+                (line_comment)
+                (statements
+                  (simple_identifier))))))))))

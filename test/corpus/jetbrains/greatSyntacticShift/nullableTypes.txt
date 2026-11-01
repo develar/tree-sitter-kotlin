@@ -1,0 +1,25 @@
+==================
+JetBrains PSI: greatSyntacticShift/nullableTypes
+==================
+
+// COMPILATION_ERRORS
+
+fun test() {
+    x as? X ?: return
+    x as X? ?: return
+
+    X?::x
+    X ?:: x
+    X? ?:: x
+    X ??:: x
+    X ?? :: x
+
+    val x: X?.() -> Unit
+    val x: X??.() -> Unit
+    val x: X?? .() -> Unit
+    val x: X ? .() -> Unit
+    val x: X ?.() -> Unit
+}
+---
+
+(source_file (line_comment) (function_declaration (simple_identifier) (function_value_parameters) (function_body (statements (elvis_expression (as_expression (simple_identifier) (user_type (type_identifier))) (jump_expression)) (elvis_expression (as_expression (simple_identifier) (nullable_type (user_type (type_identifier)) (quest))) (jump_expression)) (callable_reference (type_identifier) (quest) (simple_identifier)) (callable_reference (type_identifier) (quest) (simple_identifier)) (callable_reference (type_identifier) (quest) (quest) (simple_identifier)) (callable_reference (type_identifier) (quest) (quest) (simple_identifier)) (callable_reference (type_identifier) (quest) (quest) (simple_identifier)) (property_declaration (binding_pattern_kind) (variable_declaration (simple_identifier) (function_type receiver: (receiver_type (nullable_type (user_type (type_identifier)) (quest))) (function_type_parameters) (user_type (type_identifier))))) (property_declaration (binding_pattern_kind) (variable_declaration (simple_identifier) (function_type receiver: (receiver_type (nullable_type (user_type (type_identifier)) (quest) (quest))) (function_type_parameters) (user_type (type_identifier))))) (property_declaration (binding_pattern_kind) (variable_declaration (simple_identifier) (function_type receiver: (receiver_type (nullable_type (user_type (type_identifier)) (quest) (quest))) (function_type_parameters) (user_type (type_identifier))))) (property_declaration (binding_pattern_kind) (variable_declaration (simple_identifier) (function_type receiver: (receiver_type (nullable_type (user_type (type_identifier)) (quest))) (function_type_parameters) (user_type (type_identifier))))) (property_declaration (binding_pattern_kind) (variable_declaration (simple_identifier) (function_type receiver: (receiver_type (nullable_type (user_type (type_identifier)) (quest))) (function_type_parameters) (user_type (type_identifier)))))))))

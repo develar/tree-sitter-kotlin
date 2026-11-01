@@ -1101,3 +1101,1226 @@ interface Foo<A, B> : ((T, A?) -> B?)
           (user_type
             (type_identifier))
           (quest))))))
+
+================================================================================
+Class with several modifiers followed by another declaration
+================================================================================
+
+internal open class First {}
+class Second {}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (modifiers
+      (visibility_modifier)
+      (inheritance_modifier))
+    (type_identifier)
+    (class_body))
+  (class_declaration
+    (type_identifier)
+    (class_body)))
+
+================================================================================
+Class with several annotations followed by another declaration
+================================================================================
+
+@Component
+@ConfigurationProperties(prefix = "app")
+class First {
+    var url: String? = null
+}
+
+class Second {}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (modifiers
+      (annotation
+        (user_type
+          (type_identifier)))
+      (annotation
+        (constructor_invocation
+          (user_type
+            (type_identifier))
+          (value_arguments
+            (value_argument
+              (simple_identifier)
+              (string_literal
+                (string_content)))))))
+    (type_identifier)
+    (class_body
+      (property_declaration
+        (binding_pattern_kind)
+        (variable_declaration
+          (simple_identifier)
+          (nullable_type
+            (user_type
+              (type_identifier))
+            (quest)))
+        (null_literal))))
+  (class_declaration
+    (type_identifier)
+    (class_body)))
+
+================================================================================
+Single-line class body after a supertype constructor call
+================================================================================
+
+class C : Base() { fun f() {} }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (delegation_specifier
+      (constructor_invocation
+        (user_type
+          (type_identifier))
+        (value_arguments)))
+    (class_body
+      (function_declaration
+        (simple_identifier)
+        (function_value_parameters)
+        (function_body)))))
+
+================================================================================
+Single-line class body without a supertype
+================================================================================
+
+class C { val x = 1 }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (class_body
+      (property_declaration
+        (binding_pattern_kind)
+        (variable_declaration
+          (simple_identifier))
+        (integer_literal)))))
+
+================================================================================
+Single-line object declaration body
+================================================================================
+
+object O : Base() { fun f() {} }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (object_declaration
+    (type_identifier)
+    (delegation_specifier
+      (constructor_invocation
+        (user_type
+          (type_identifier))
+        (value_arguments)))
+    (class_body
+      (function_declaration
+        (simple_identifier)
+        (function_value_parameters)
+        (function_body)))))
+
+================================================================================
+Single-line class body with several supertypes
+================================================================================
+
+class C : Base(), I { fun f() {} }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (delegation_specifier
+      (constructor_invocation
+        (user_type
+          (type_identifier))
+        (value_arguments)))
+    (delegation_specifier
+      (user_type
+        (type_identifier)))
+    (class_body
+      (function_declaration
+        (simple_identifier)
+        (function_value_parameters)
+        (function_body)))))
+
+================================================================================
+Single-line class body after interface delegation
+================================================================================
+
+class C : I by d { fun f() {} }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (delegation_specifier
+      (explicit_delegation
+        (user_type
+          (type_identifier))
+        (simple_identifier)))
+    (class_body
+      (function_declaration
+        (simple_identifier)
+        (function_value_parameters)
+        (function_body)))))
+
+================================================================================
+Single-line object expression body
+================================================================================
+
+val o = object : Base() { fun f() {} }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (property_declaration
+    (binding_pattern_kind)
+    (variable_declaration
+      (simple_identifier))
+    (object_literal
+      (delegation_specifier
+        (constructor_invocation
+          (user_type
+            (type_identifier))
+          (value_arguments)))
+      (class_body
+        (function_declaration
+          (simple_identifier)
+          (function_value_parameters)
+          (function_body))))))
+
+================================================================================
+Single-line body with a named companion object
+================================================================================
+
+class C { companion object Foo { val x = 1 } }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (class_body
+      (companion_object
+        (type_identifier)
+        (class_body
+          (property_declaration
+            (binding_pattern_kind)
+            (variable_declaration
+              (simple_identifier))
+            (integer_literal)))))))
+
+================================================================================
+Single-line body with semicolon-separated members
+================================================================================
+
+class C : Base() { val x = 1; fun f() {}; }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (delegation_specifier
+      (constructor_invocation
+        (user_type
+          (type_identifier))
+        (value_arguments)))
+    (class_body
+      (property_declaration
+        (binding_pattern_kind)
+        (variable_declaration
+          (simple_identifier))
+        (integer_literal))
+      (function_declaration
+        (simple_identifier)
+        (function_value_parameters)
+        (function_body)))))
+
+================================================================================
+Single-line interface body
+================================================================================
+
+interface I { fun f() }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (class_body
+      (function_declaration
+        (simple_identifier)
+        (function_value_parameters)))))
+
+================================================================================
+Nested single-line class bodies
+================================================================================
+
+class C : Base() { class D : Base() { fun f() {} } }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (delegation_specifier
+      (constructor_invocation
+        (user_type
+          (type_identifier))
+        (value_arguments)))
+    (class_body
+      (class_declaration
+        (type_identifier)
+        (delegation_specifier
+          (constructor_invocation
+            (user_type
+              (type_identifier))
+            (value_arguments)))
+        (class_body
+          (function_declaration
+            (simple_identifier)
+            (function_value_parameters)
+            (function_body)))))))
+
+================================================================================
+Leading semicolon in a class body
+================================================================================
+
+class C {;
+    fun f() {}
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (class_body
+      (function_declaration
+        (simple_identifier)
+        (function_value_parameters)
+        (function_body)))))
+
+================================================================================
+Class body containing only a semicolon
+================================================================================
+
+class C {;}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (class_body)))
+
+================================================================================
+Leading semicolon in a class body with a supertype
+================================================================================
+
+class C : B() {;
+    fun f() {}
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (delegation_specifier
+      (constructor_invocation
+        (user_type
+          (type_identifier))
+        (value_arguments)))
+    (class_body
+      (function_declaration
+        (simple_identifier)
+        (function_value_parameters)
+        (function_body)))))
+
+================================================================================
+Leading semicolon in a function body
+================================================================================
+
+fun f() {;
+    g()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (simple_identifier)
+    (function_value_parameters)
+    (function_body
+      (statements
+        (call_expression
+          (simple_identifier)
+          (call_suffix
+            (value_arguments)))))))
+
+================================================================================
+Leading semicolon in an object body
+================================================================================
+
+object O {;
+    fun f() {}
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (object_declaration
+    (type_identifier)
+    (class_body
+      (function_declaration
+        (simple_identifier)
+        (function_value_parameters)
+        (function_body)))))
+
+================================================================================
+Leading semicolon in an interface body
+================================================================================
+
+interface I {;
+    fun f()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (class_body
+      (function_declaration
+        (simple_identifier)
+        (function_value_parameters)))))
+
+================================================================================
+Leading semicolon in an initializer block
+================================================================================
+
+class C {
+    init {;
+        g()
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (class_body
+      (anonymous_initializer
+        (statements
+          (call_expression
+            (simple_identifier)
+            (call_suffix
+              (value_arguments))))))))
+
+================================================================================
+Leading semicolon in a lambda
+================================================================================
+
+val l = {;
+    g()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (property_declaration
+    (binding_pattern_kind)
+    (variable_declaration
+      (simple_identifier))
+    (lambda_literal
+      (statements
+        (call_expression
+          (simple_identifier)
+          (call_suffix
+            (value_arguments)))))))
+
+================================================================================
+Leading semicolon after lambda parameters
+================================================================================
+
+val l = { x: Int ->;
+    g()
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (property_declaration
+    (binding_pattern_kind)
+    (variable_declaration
+      (simple_identifier))
+    (lambda_literal
+      (lambda_parameters
+        (variable_declaration
+          (simple_identifier)
+          (user_type
+            (type_identifier))))
+      (statements
+        (call_expression
+          (simple_identifier)
+          (call_suffix
+            (value_arguments)))))))
+
+================================================================================
+Leading semicolon in a companion object body
+================================================================================
+
+class C {
+    companion object {;
+        fun f() {}
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (class_body
+      (companion_object
+        (class_body
+          (function_declaration
+            (simple_identifier)
+            (function_value_parameters)
+            (function_body)))))))
+
+================================================================================
+Leading semicolon in a getter body
+================================================================================
+
+val p: Int
+    get() {;
+        return 1
+    }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (property_declaration
+    (binding_pattern_kind)
+    (variable_declaration
+      (simple_identifier)
+      (user_type
+        (type_identifier))))
+  (getter
+    (function_body
+      (statements
+        (jump_expression
+          (integer_literal))))))
+
+================================================================================
+Leading semicolon in try, catch and finally blocks
+================================================================================
+
+fun f() {
+    try {;
+        g()
+    } catch (e: E) {;
+        h()
+    } finally {;
+        i()
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (simple_identifier)
+    (function_value_parameters)
+    (function_body
+      (statements
+        (try_expression
+          (statements
+            (call_expression
+              (simple_identifier)
+              (call_suffix
+                (value_arguments))))
+          (catch_block
+            (simple_identifier)
+            (user_type
+              (type_identifier))
+            (statements
+              (call_expression
+                (simple_identifier)
+                (call_suffix
+                  (value_arguments)))))
+          (finally_block
+            (statements
+              (call_expression
+                (simple_identifier)
+                (call_suffix
+                  (value_arguments))))))))))
+
+================================================================================
+Leading semicolon in a when entry body
+================================================================================
+
+fun f(x: Int) {
+    when (x) {
+        1 -> {;
+            g()
+        }
+    }
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (simple_identifier)
+    (function_value_parameters
+      (parameter
+        (simple_identifier)
+        (user_type
+          (type_identifier))))
+    (function_body
+      (statements
+        (when_expression
+          (when_subject
+            (simple_identifier))
+          (when_entry
+            (when_condition
+              (integer_literal))
+            (control_structure_body
+              (statements
+                (call_expression
+                  (simple_identifier)
+                  (call_suffix
+                    (value_arguments)))))))))))
+
+================================================================================
+Leading semicolon in an object literal body
+================================================================================
+
+val o = object : B() {;
+    fun f() {}
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (property_declaration
+    (binding_pattern_kind)
+    (variable_declaration
+      (simple_identifier))
+    (object_literal
+      (delegation_specifier
+        (constructor_invocation
+          (user_type
+            (type_identifier))
+          (value_arguments)))
+      (class_body
+        (function_declaration
+          (simple_identifier)
+          (function_value_parameters)
+          (function_body))))))
+
+================================================================================
+Primary constructor with a modifier and no constructor keyword
+================================================================================
+
+class C private ()
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (primary_constructor
+      (modifiers
+        (visibility_modifier)))))
+
+================================================================================
+Modifier on an anonymous initializer
+================================================================================
+
+class C{private init{}}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (class_body
+      (anonymous_initializer
+        (modifiers
+          (visibility_modifier))))))
+
+================================================================================
+Explicit backing field
+================================================================================
+
+class C {
+    val x: Any field: String = "OK"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (class_body
+      (property_declaration
+        (binding_pattern_kind)
+        (variable_declaration
+          (simple_identifier)
+          (user_type
+            (type_identifier)))
+        (backing_field
+          (user_type
+            (type_identifier))
+          (string_literal
+            (string_content)))))))
+
+================================================================================
+Explicit backing field on its own line, type inferred
+================================================================================
+
+class C {
+    val a: Any
+        field = 2
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (class_body
+      (property_declaration
+        (binding_pattern_kind)
+        (variable_declaration
+          (simple_identifier)
+          (user_type
+            (type_identifier)))
+        (backing_field
+          (integer_literal))))))
+
+================================================================================
+Explicit backing field with no initializer
+================================================================================
+
+class C {
+    val c: Any
+        field: Int
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (class_body
+      (property_declaration
+        (binding_pattern_kind)
+        (variable_declaration
+          (simple_identifier)
+          (user_type
+            (type_identifier)))
+        (backing_field
+          (user_type
+            (type_identifier)))))))
+
+================================================================================
+Explicit backing field with a visibility modifier
+================================================================================
+
+class C {
+    val f: Any
+        private field: Int = 1
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (class_body
+      (property_declaration
+        (binding_pattern_kind)
+        (variable_declaration
+          (simple_identifier)
+          (user_type
+            (type_identifier)))
+        (backing_field
+          (modifiers
+            (visibility_modifier))
+          (user_type
+            (type_identifier))
+          (integer_literal))))))
+
+================================================================================
+Explicit backing field alongside accessors
+================================================================================
+
+class C {
+    var g: Any
+        field: Int = 1
+        get() = field
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (class_body
+      (property_declaration
+        (binding_pattern_kind)
+        (variable_declaration
+          (simple_identifier)
+          (user_type
+            (type_identifier)))
+        (backing_field
+          (user_type
+            (type_identifier))
+          (integer_literal)))
+      (getter
+        (function_body
+          (simple_identifier))))))
+
+================================================================================
+field stays an ordinary identifier
+================================================================================
+
+class C { val field = 1 }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (class_body
+      (property_declaration
+        (binding_pattern_kind)
+        (variable_declaration
+          (simple_identifier))
+        (integer_literal)))))
+
+================================================================================
+Class with explicit delegation to a postfix expression member
+================================================================================
+
+class A : I by a!!.b { }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (delegation_specifier
+      (explicit_delegation
+        (user_type
+          (type_identifier))
+        (navigation_expression
+          (postfix_expression
+            (simple_identifier))
+          (navigation_suffix
+            (simple_identifier)))))
+    (class_body)))
+
+================================================================================
+Class with explicit delegation to a callable reference, body on next line
+================================================================================
+
+class C : I by ::foo
+{ fun member() {} }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (delegation_specifier
+      (explicit_delegation
+        (user_type
+          (type_identifier))
+        (callable_reference
+          (simple_identifier))))
+    (class_body
+      (function_declaration
+        (simple_identifier)
+        (function_value_parameters)
+        (function_body)))))
+
+================================================================================
+Class with explicit delegation to an elvis expression, body on next line
+================================================================================
+
+class D : I by a ?: b
+{ fun member() {} }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (delegation_specifier
+      (explicit_delegation
+        (user_type
+          (type_identifier))
+        (elvis_expression
+          (simple_identifier)
+          (simple_identifier))))
+    (class_body
+      (function_declaration
+        (simple_identifier)
+        (function_value_parameters)
+        (function_body)))))
+
+================================================================================
+Class with explicit delegation to a parenthesized selector
+================================================================================
+
+class C : I by obj.(foo) { fun member() {} }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (delegation_specifier
+      (explicit_delegation
+        (user_type
+          (type_identifier))
+        (navigation_expression
+          (simple_identifier)
+          (navigation_suffix
+            (parenthesized_expression
+              (simple_identifier))))))
+    (class_body
+      (function_declaration
+        (simple_identifier)
+        (function_value_parameters)
+        (function_body)))))
+
+================================================================================
+Class with explicit delegation to a lambda selector call
+================================================================================
+
+class D : I by obj.{ foo }() { fun member() {} }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (delegation_specifier
+      (explicit_delegation
+        (user_type
+          (type_identifier))
+        (call_expression
+          (navigation_expression
+            (simple_identifier)
+            (navigation_suffix
+              (lambda_literal
+                (statements
+                  (simple_identifier)))))
+          (call_suffix
+            (value_arguments)))))
+    (class_body
+      (function_declaration
+        (simple_identifier)
+        (function_value_parameters)
+        (function_body)))))
+
+================================================================================
+No operand of a class delegate takes a trailing lambda
+================================================================================
+
+class A {
+  private class B(val d: P) : P by d()
+
+  companion object { val y = 1 }
+}
+class G : P by envs + extra {
+  override fun get(key: String) = null
+}
+class F<T>(parent: T) : P by parent
+    where T : P {
+}
+
+---
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (class_body
+      (class_declaration
+        (modifiers
+          (visibility_modifier))
+        (type_identifier)
+        (primary_constructor
+          (class_parameter
+            (binding_pattern_kind)
+            (simple_identifier)
+            (user_type
+              (type_identifier))))
+        (delegation_specifier
+          (explicit_delegation
+            (user_type
+              (type_identifier))
+            (call_expression
+              (simple_identifier)
+              (call_suffix
+                (value_arguments))))))
+      (companion_object
+        (class_body
+          (property_declaration
+            (binding_pattern_kind)
+            (variable_declaration
+              (simple_identifier))
+            (integer_literal))))))
+  (class_declaration
+    (type_identifier)
+    (delegation_specifier
+      (explicit_delegation
+        (user_type
+          (type_identifier))
+        (additive_expression
+          (simple_identifier)
+          (simple_identifier))))
+    (class_body
+      (function_declaration
+        (modifiers
+          (member_modifier))
+        (simple_identifier)
+        (function_value_parameters
+          (parameter
+            (simple_identifier)
+            (user_type
+              (type_identifier))))
+        (function_body
+          (null_literal)))))
+  (class_declaration
+    (type_identifier)
+    (type_parameters
+      (type_parameter
+        (type_identifier)))
+    (primary_constructor
+      (class_parameter
+        (simple_identifier)
+        (user_type
+          (type_identifier))))
+    (delegation_specifier
+      (explicit_delegation
+        (user_type
+          (type_identifier))
+        (simple_identifier)))
+    (type_constraints
+      (type_constraint
+        (type_identifier)
+        (user_type
+          (type_identifier))))
+    (class_body)))
+
+================================================================================
+Getter and setter on one line below the property
+================================================================================
+
+class A {
+  var startIndex: Int = 0
+    get private set
+  var b: Int = 0
+    private set get
+}
+
+---
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (class_body
+      (property_declaration
+        (binding_pattern_kind)
+        (variable_declaration
+          (simple_identifier)
+          (user_type
+            (type_identifier)))
+        (integer_literal))
+      (getter)
+      (setter
+        (modifiers
+          (visibility_modifier)))
+      (property_declaration
+        (binding_pattern_kind)
+        (variable_declaration
+          (simple_identifier)
+          (user_type
+            (type_identifier)))
+        (integer_literal))
+      (setter
+        (modifiers
+          (visibility_modifier)))
+      (getter))))
+
+================================================================================
+A companion block among the members of a class, an object and an enum class
+================================================================================
+
+class C {
+    companion {
+        companion {
+            fun inner() {}
+        }
+
+        fun outer() {}
+    }
+}
+object O { companion { } }
+enum class E { A; companion { val x = 1 } }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (class_body
+      (companion_block
+        (class_body
+          (companion_block
+            (class_body
+              (function_declaration
+                (simple_identifier)
+                (function_value_parameters)
+                (function_body))))
+          (function_declaration
+            (simple_identifier)
+            (function_value_parameters)
+            (function_body))))))
+  (object_declaration
+    (type_identifier)
+    (class_body
+      (companion_block
+        (class_body))))
+  (class_declaration
+    (type_identifier)
+    (enum_class_body
+      (enum_entry
+        (simple_identifier))
+      (companion_block
+        (class_body
+          (property_declaration
+            (binding_pattern_kind)
+            (variable_declaration
+              (simple_identifier))
+            (integer_literal)))))))
+
+================================================================================
+Companion extensions, with other modifiers and a context
+================================================================================
+
+companion fun String.foo() {}
+private companion val A.k = "K"
+internal inline companion fun A.f() = o() + k
+context(_: A)
+companion fun C.func(s: String) = s
+class C { companion object Named }
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_declaration
+    (modifiers
+      (member_modifier))
+    (receiver_type
+      (user_type
+        (type_identifier)))
+    (simple_identifier)
+    (function_value_parameters)
+    (function_body))
+  (property_declaration
+    (modifiers
+      (visibility_modifier)
+      (member_modifier))
+    (binding_pattern_kind)
+    (receiver_type
+      (user_type
+        (type_identifier)))
+    (variable_declaration
+      (simple_identifier))
+    (string_literal
+      (string_content)))
+  (function_declaration
+    (modifiers
+      (visibility_modifier)
+      (function_modifier)
+      (member_modifier))
+    (receiver_type
+      (user_type
+        (type_identifier)))
+    (simple_identifier)
+    (function_value_parameters)
+    (function_body
+      (additive_expression
+        (call_expression
+          (simple_identifier)
+          (call_suffix
+            (value_arguments)))
+        (simple_identifier))))
+  (function_declaration
+    (modifiers
+      (context_receiver
+        (parameter
+          (simple_identifier)
+          (user_type
+            (type_identifier))))
+      (member_modifier))
+    (receiver_type
+      (user_type
+        (type_identifier)))
+    (simple_identifier)
+    (function_value_parameters
+      (parameter
+        (simple_identifier)
+        (user_type
+          (type_identifier))))
+    (function_body
+      (simple_identifier)))
+  (class_declaration
+    (type_identifier)
+    (class_body
+      (companion_object
+        (type_identifier)))))
+
+================================================================================
+A function type with a context as a supertype
+================================================================================
+
+class A : context(String) () -> Unit {}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (delegation_specifier
+      (type_modifiers
+        (context_receiver
+          (user_type
+            (type_identifier))))
+      (function_type
+        (function_type_parameters)
+        (user_type
+          (type_identifier))))
+    (class_body)))

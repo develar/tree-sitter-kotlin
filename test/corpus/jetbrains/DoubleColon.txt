@@ -1,0 +1,75 @@
+==================
+JetBrains PSI: DoubleColon
+==================
+
+// COMPILATION_ERRORS
+
+fun simple() {
+    A::a
+    A::a + 1
+    Map<String, Int>::size
+
+    ::a
+
+    a.b::c
+    a::b.c
+    a.b::c.d
+
+    (a::b)()
+    a.(b::c)()
+}
+
+fun genericType() {
+    a<b>::c
+    a<b>::c.d
+    a.b<c>::d
+    a.b<c>::d.e
+    a.b<c.d>::e
+    a.b<c.d>::e.d
+    a.b<c.d<e.f>>::g.h
+
+    a.b.c<d>.e<f>.g::h
+}
+
+fun nullableType() {
+    a?::b
+    a??::b
+    a<b>?::c
+    a<b?,c?>?::d
+}
+
+fun classLiteral() {
+    A::class
+    a<b,c>::class
+    ::class
+    a b ::class
+
+    this::class
+    super::class
+    X()::class
+    object {}::class
+}
+
+fun expressions() {
+    this@x::foo
+    super<a>@b::foo
+
+    -a::b
+    ++a::b
+    a+b::c
+    (a+b)::c
+    x()::e
+    x().y().z()::e
+
+    a::b.c::d
+    A::a::b
+}
+
+fun emptyLHS() {
+    ::x.name
+    foo(::x.name)
+}
+
+---
+
+(source_file (line_comment) (function_declaration (simple_identifier) (function_value_parameters) (function_body (statements (callable_reference (type_identifier) (simple_identifier)) (additive_expression (callable_reference (type_identifier) (simple_identifier)) (integer_literal)) (navigation_expression (simple_identifier) (navigation_suffix (type_arguments (type_projection (user_type (type_identifier))) (type_projection (user_type (type_identifier)))) (simple_identifier))) (callable_reference (simple_identifier)) (navigation_expression (navigation_expression (simple_identifier) (navigation_suffix (simple_identifier))) (navigation_suffix (simple_identifier))) (navigation_expression (callable_reference (type_identifier) (simple_identifier)) (navigation_suffix (simple_identifier))) (navigation_expression (navigation_expression (navigation_expression (simple_identifier) (navigation_suffix (simple_identifier))) (navigation_suffix (simple_identifier))) (navigation_suffix (simple_identifier))) (call_expression (parenthesized_expression (callable_reference (type_identifier) (simple_identifier))) (call_suffix (value_arguments))) (call_expression (navigation_expression (simple_identifier) (navigation_suffix (parenthesized_expression (callable_reference (type_identifier) (simple_identifier))))) (call_suffix (value_arguments)))))) (function_declaration (simple_identifier) (function_value_parameters) (function_body (statements (comparison_expression (comparison_expression (simple_identifier) (simple_identifier)) (callable_reference (simple_identifier))) (navigation_expression (navigation_expression (simple_identifier) (navigation_suffix (type_arguments (type_projection (user_type (type_identifier)))) (simple_identifier))) (navigation_suffix (simple_identifier))) (comparison_expression (comparison_expression (navigation_expression (simple_identifier) (navigation_suffix (simple_identifier))) (simple_identifier)) (callable_reference (simple_identifier))) (navigation_expression (navigation_expression (navigation_expression (simple_identifier) (navigation_suffix (simple_identifier))) (navigation_suffix (type_arguments (type_projection (user_type (type_identifier)))) (simple_identifier))) (navigation_suffix (simple_identifier))) (comparison_expression (comparison_expression (navigation_expression (simple_identifier) (navigation_suffix (simple_identifier))) (navigation_expression (simple_identifier) (navigation_suffix (simple_identifier)))) (callable_reference (simple_identifier))) (navigation_expression (navigation_expression (navigation_expression (simple_identifier) (navigation_suffix (simple_identifier))) (navigation_suffix (type_arguments (type_projection (user_type (type_identifier) (type_identifier)))) (simple_identifier))) (navigation_suffix (simple_identifier))) (navigation_expression (navigation_expression (navigation_expression (simple_identifier) (navigation_suffix (simple_identifier))) (navigation_suffix (type_arguments (type_projection (user_type (type_identifier) (type_identifier) (type_arguments (type_projection (user_type (type_identifier) (type_identifier))))))) (simple_identifier))) (navigation_suffix (simple_identifier))) (navigation_expression (navigation_expression (navigation_expression (navigation_expression (navigation_expression (simple_identifier) (navigation_suffix (simple_identifier))) (navigation_suffix (simple_identifier))) (navigation_suffix (type_arguments (type_projection (user_type (type_identifier)))) (simple_identifier))) (navigation_suffix (type_arguments (type_projection (user_type (type_identifier)))) (simple_identifier))) (navigation_suffix (simple_identifier)))))) (function_declaration (simple_identifier) (function_value_parameters) (function_body (statements (callable_reference (type_identifier) (quest) (simple_identifier)) (callable_reference (type_identifier) (quest) (quest) (simple_identifier)) (navigation_expression (simple_identifier) (navigation_suffix (type_arguments (type_projection (user_type (type_identifier)))) (quest) (simple_identifier))) (navigation_expression (simple_identifier) (navigation_suffix (type_arguments (type_projection (nullable_type (user_type (type_identifier)) (quest))) (type_projection (nullable_type (user_type (type_identifier)) (quest)))) (quest) (simple_identifier)))))) (function_declaration (simple_identifier) (function_value_parameters) (function_body (statements (callable_reference (type_identifier)) (navigation_expression (simple_identifier) (navigation_suffix (type_arguments (type_projection (user_type (type_identifier))) (type_projection (user_type (type_identifier)))))) (callable_reference) (infix_expression (simple_identifier) (simple_identifier) (callable_reference)) (navigation_expression (this_expression) (navigation_suffix)) (navigation_expression (super_expression) (navigation_suffix)) (navigation_expression (call_expression (simple_identifier) (call_suffix (value_arguments))) (navigation_suffix)) (navigation_expression (object_literal (class_body)) (navigation_suffix))))) (function_declaration (simple_identifier) (function_value_parameters) (function_body (statements (navigation_expression (this_expression (type_identifier)) (navigation_suffix (simple_identifier))) (navigation_expression (super_expression (user_type (type_identifier)) (type_identifier)) (navigation_suffix (simple_identifier))) (prefix_expression (callable_reference (type_identifier) (simple_identifier))) (prefix_expression (callable_reference (type_identifier) (simple_identifier))) (additive_expression (simple_identifier) (callable_reference (type_identifier) (simple_identifier))) (navigation_expression (parenthesized_expression (additive_expression (simple_identifier) (simple_identifier))) (navigation_suffix (simple_identifier))) (navigation_expression (call_expression (simple_identifier) (call_suffix (value_arguments))) (navigation_suffix (simple_identifier))) (navigation_expression (call_expression (navigation_expression (call_expression (navigation_expression (call_expression (simple_identifier) (call_suffix (value_arguments))) (navigation_suffix (simple_identifier))) (call_suffix (value_arguments))) (navigation_suffix (simple_identifier))) (call_suffix (value_arguments))) (navigation_suffix (simple_identifier))) (navigation_expression (navigation_expression (callable_reference (type_identifier) (simple_identifier)) (navigation_suffix (simple_identifier))) (navigation_suffix (simple_identifier))) (navigation_expression (callable_reference (type_identifier) (simple_identifier)) (navigation_suffix (simple_identifier)))))) (function_declaration (simple_identifier) (function_value_parameters) (function_body (statements (navigation_expression (callable_reference (simple_identifier)) (navigation_suffix (simple_identifier))) (call_expression (simple_identifier) (call_suffix (value_arguments (value_argument (navigation_expression (callable_reference (simple_identifier)) (navigation_suffix (simple_identifier)))))))))))

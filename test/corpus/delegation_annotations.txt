@@ -1,0 +1,380 @@
+================================================================================
+Annotated supertype
+================================================================================
+
+class C : @A Base
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (annotation
+      (user_type
+        (type_identifier)))
+    (delegation_specifier
+      (user_type
+        (type_identifier)))))
+
+================================================================================
+Annotated supertype with a constructor call
+================================================================================
+
+class C : @A Base()
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (annotation
+      (user_type
+        (type_identifier)))
+    (delegation_specifier
+      (constructor_invocation
+        (user_type
+          (type_identifier))
+        (value_arguments)))))
+
+================================================================================
+Annotation with arguments on a supertype with arguments
+================================================================================
+
+class C : @A("x") Base(1)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (annotation
+      (constructor_invocation
+        (user_type
+          (type_identifier))
+        (value_arguments
+          (value_argument
+            (string_literal
+              (string_content))))))
+    (delegation_specifier
+      (constructor_invocation
+        (user_type
+          (type_identifier))
+        (value_arguments
+          (value_argument
+            (integer_literal)))))))
+
+================================================================================
+Annotation on the second supertype only
+================================================================================
+
+class C : Base(), @A I
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (delegation_specifier
+      (constructor_invocation
+        (user_type
+          (type_identifier))
+        (value_arguments)))
+    (annotation
+      (user_type
+        (type_identifier)))
+    (delegation_specifier
+      (user_type
+        (type_identifier)))))
+
+================================================================================
+Annotated explicit delegation
+================================================================================
+
+class C : @A I by impl
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (annotation
+      (user_type
+        (type_identifier)))
+    (delegation_specifier
+      (explicit_delegation
+        (user_type
+          (type_identifier))
+        (simple_identifier)))))
+
+================================================================================
+Annotated function type as a supertype
+================================================================================
+
+class C : @A () -> Unit
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (annotation
+      (user_type
+        (type_identifier)))
+    (delegation_specifier
+      (function_type
+        (function_type_parameters)
+        (user_type
+          (type_identifier))))))
+
+================================================================================
+Annotations on a constructor call and a delegation in one list
+================================================================================
+
+class C : @A Base(1), @B Iface by impl
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (annotation
+      (user_type
+        (type_identifier)))
+    (delegation_specifier
+      (constructor_invocation
+        (user_type
+          (type_identifier))
+        (value_arguments
+          (value_argument
+            (integer_literal)))))
+    (annotation
+      (user_type
+        (type_identifier)))
+    (delegation_specifier
+      (explicit_delegation
+        (user_type
+          (type_identifier))
+        (simple_identifier)))))
+
+================================================================================
+Annotated supertype in an object expression
+================================================================================
+
+val o = object : @A Base() {}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (property_declaration
+    (binding_pattern_kind)
+    (variable_declaration
+      (simple_identifier))
+    (object_literal
+      (annotation
+        (user_type
+          (type_identifier)))
+      (delegation_specifier
+        (constructor_invocation
+          (user_type
+            (type_identifier))
+          (value_arguments)))
+      (class_body))))
+
+================================================================================
+Unannotated delegation is unchanged
+================================================================================
+
+class C : I by impl
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (delegation_specifier
+      (explicit_delegation
+        (user_type
+          (type_identifier))
+        (simple_identifier)))))
+
+================================================================================
+Annotated supertype followed by a class body
+================================================================================
+
+class C : @A Base() {
+    fun f() {}
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (annotation
+      (user_type
+        (type_identifier)))
+    (delegation_specifier
+      (constructor_invocation
+        (user_type
+          (type_identifier))
+        (value_arguments)))
+    (class_body
+      (function_declaration
+        (simple_identifier)
+        (function_value_parameters)
+        (function_body)))))
+
+================================================================================
+Annotated explicit delegation followed by a class body
+================================================================================
+
+class C : @A I by impl {
+    fun f() {}
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (annotation
+      (user_type
+        (type_identifier)))
+    (delegation_specifier
+      (explicit_delegation
+        (user_type
+          (type_identifier))
+        (simple_identifier)))
+    (class_body
+      (function_declaration
+        (simple_identifier)
+        (function_value_parameters)
+        (function_body)))))
+
+================================================================================
+Delegate operands end before the class body
+================================================================================
+
+class C : I by throw x { fun m() {} }
+class D : I by if (c) x else y { fun m() {} }
+class E : I by x<T>
+{ fun m() {} }
+class F : I by f<T>(a), J {}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (delegation_specifier
+      (explicit_delegation
+        (user_type
+          (type_identifier))
+        (jump_expression
+          (simple_identifier))))
+    (class_body
+      (function_declaration
+        (simple_identifier)
+        (function_value_parameters)
+        (function_body))))
+  (class_declaration
+    (type_identifier)
+    (delegation_specifier
+      (explicit_delegation
+        (user_type
+          (type_identifier))
+        (if_expression
+          (simple_identifier)
+          (control_structure_body
+            (simple_identifier))
+          (control_structure_body
+            (simple_identifier)))))
+    (class_body
+      (function_declaration
+        (simple_identifier)
+        (function_value_parameters)
+        (function_body))))
+  (class_declaration
+    (type_identifier)
+    (delegation_specifier
+      (explicit_delegation
+        (user_type
+          (type_identifier))
+        (call_expression
+          (simple_identifier)
+          (call_suffix
+            (type_arguments
+              (type_projection
+                (user_type
+                  (type_identifier))))))))
+    (class_body
+      (function_declaration
+        (simple_identifier)
+        (function_value_parameters)
+        (function_body))))
+  (class_declaration
+    (type_identifier)
+    (delegation_specifier
+      (explicit_delegation
+        (user_type
+          (type_identifier))
+        (call_expression
+          (simple_identifier)
+          (call_suffix
+            (type_arguments
+              (type_projection
+                (user_type
+                  (type_identifier))))
+            (value_arguments
+              (value_argument
+                (simple_identifier)))))))
+    (delegation_specifier
+      (user_type
+        (type_identifier)))
+    (class_body)))
+
+================================================================================
+An if branch of a delegate takes an assignment or a loop
+================================================================================
+
+class C : I by if (c) x = y else z {}
+class D : I by if (c) while (d) foo() else z {}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (class_declaration
+    (type_identifier)
+    (delegation_specifier
+      (explicit_delegation
+        (user_type
+          (type_identifier))
+        (if_expression
+          (simple_identifier)
+          (control_structure_body
+            (assignment
+              (directly_assignable_expression
+                (simple_identifier))
+              (simple_identifier)))
+          (control_structure_body
+            (simple_identifier)))))
+    (class_body))
+  (class_declaration
+    (type_identifier)
+    (delegation_specifier
+      (explicit_delegation
+        (user_type
+          (type_identifier))
+        (if_expression
+          (simple_identifier)
+          (control_structure_body
+            (while_statement
+              (simple_identifier)
+              (control_structure_body
+                (call_expression
+                  (simple_identifier)
+                  (call_suffix
+                    (value_arguments))))))
+          (control_structure_body
+            (simple_identifier)))))
+    (class_body)))

@@ -21,6 +21,25 @@ const {
 // ---------------------------------------------------------------------------
 
 describe('mapping coverage', () => {
+  it('retains assignment, destructuring and annotated-expression ownership nodes', () => {
+    expect(TS_TO_PSI.assignment).toBe('BINARY_EXPRESSION');
+    expect(SKIP_TS_NODES.has('assignment')).toBe(false);
+    expect(TS_TO_PSI.destructuring_declaration).toBe('DESTRUCTURING_DECLARATION');
+    expect(SKIP_PSI_NODES.has('ANNOTATED_EXPRESSION')).toBe(false);
+    expect(SKIP_PSI_NODES.has('CONTEXT_PARAMETER_LIST')).toBe(false);
+    expect(ALL_PSI_COMPOSITE_NODES.has('BODY')).toBe(true);
+  });
+  it('annotated_expression is a transparent wrapper', () => {
+    // `@Suppress("x") y = f()`. PSI has no composite for an annotated
+    // statement that survives normalisation: the ANNOTATION_ENTRY is attached
+    // to the expression itself, so the grammar's wrapper is dropped and its
+    // children promoted. A missing entry here is not benign — it raises
+    // UnknownNodeTypeError for every file containing one.
+    expect(TS_TO_PSI).toHaveProperty('annotated_expression');
+    expect(TS_TO_PSI.annotated_expression).toBe(null);
+    expect(ALL_TS_NAMED_NODES.has('annotated_expression')).toBe(true);
+  });
+
   it('all TS named nodes are in TS_TO_PSI mapping', () => {
     for (const tsName of ALL_TS_NAMED_NODES) {
       expect(TS_TO_PSI).toHaveProperty(tsName);
