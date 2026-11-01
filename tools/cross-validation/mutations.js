@@ -21,9 +21,9 @@
 const fs = require('fs');
 const path = require('path');
 
-const HARD_KEYWORDS = ['as', 'break', 'class', 'continue', 'do', 'else', 'false', 'for', 'fun', 'if', 'in',
-  'interface', 'is', 'null', 'object', 'package', 'return', 'super', 'this', 'throw', 'true', 'try',
-  'typealias', 'typeof', 'val', 'var', 'when', 'while'];
+// The hard keywords as the grammar reserves them (`reserved.global` of grammar.js), read from the
+// generated grammar so that the list has one home.
+const HARD_KEYWORDS = require('../../src/grammar.json').reserved.global.map(word => word.value);
 const SOFT_KEYWORDS = ['by', 'catch', 'constructor', 'delegate', 'dynamic', 'field', 'file', 'finally', 'get',
   'import', 'init', 'param', 'property', 'receiver', 'set', 'setparam', 'value', 'where', 'context', 'it'];
 const MODIFIERS = ['abstract', 'actual', 'annotation', 'companion', 'const', 'crossinline', 'data', 'enum',
